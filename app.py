@@ -5,6 +5,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import pytz
 import atexit
 import logging
+import time
 
 # Initialisasi logging
 logging.basicConfig(level=logging.INFO)
@@ -14,6 +15,7 @@ app = Flask(__name__, template_folder='html', static_folder='css')
 
 # List URL Web yang akan dicek
 urls = [
+    'https://ittelkom-sby.ac.id/',
     'https://www.unpad.ac.id',
     'https://www.itb.ac.id',
     'https://www.upi.edu',
@@ -68,8 +70,13 @@ status_data = {}
 # Fungsi asinkronus untuk mengecek status setiap website
 async def fetch_status(session, url):
     try:
-        async with session.get(url, timeout=10) as response:
-            status_data[url] = 'UP' if response.status == 200 else 'DOWN'
+        async with session.get(url, timeout=10, allow_redirects=False) as response:
+            if response.status == 200:
+                status_data[url] = 'UP'
+            elif 300 <= response.status <= 400:
+                status_data[url] = 'REDIRECT'
+            else:
+                status_data[url] = 'DOWN'
     except (aiohttp.ClientError, asyncio.TimeoutError):
         status_data[url] = 'DOWN'
     except Exception as e:
