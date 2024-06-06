@@ -102,7 +102,7 @@ scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
 # Rute API untuk mendapatkan data status
-@app.route('/api/status', methods=['GET'])
+@app.route('/api/status/', methods=['GET'])
 def get_status():
     return jsonify(status_data)
 
