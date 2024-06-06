@@ -25,7 +25,15 @@
                 for (const [url, status] of Object.entries(data)) {
                     const div = document.createElement('div');
                     div.classList.add('status-box');
-                    div.classList.add(status === 'UP' ? 'status-up' : 'status-down');
+
+                    // Menambahkan class berdasarkan status
+                    if (status === 'UP') {
+                        div.classList.add('status-up');
+                    } else if (status === 'DOWN') {
+                        div.classList.add('status-down');
+                    } else if (status === 'REDIRECT') {
+                        div.classList.add('status-redirect');
+                    }
 
                     // Menambahkan nomor website secara langsung ke dalam kotak status
                     div.innerHTML = `<span class="website-number">Website ${websiteNumber}: </span>${url}: ${status}`;
